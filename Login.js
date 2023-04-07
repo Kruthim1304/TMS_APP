@@ -4,6 +4,7 @@ import {
   Image,
   StyleSheet,
   TextInput,
+  ImageBackground,
   TouchableOpacity,
   Alert,
 } from "react-native";
@@ -43,6 +44,13 @@ const Login = () => {
   };
   return (
     <View style={styles.mainContainer}>
+      <View style={styles.backdrop}>
+      <Image
+          style={styles.backdropImg}
+          source={require("./assets/bg2.png")}
+        />
+      </View>
+
       <View style={styles.imageContainer}>
         <Image
           style={styles.imageStyle}
@@ -189,6 +197,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingTop: 60,
     paddingBottom: 0,
+  },
+  
+  backdrop: {
+    zIndex: -1,
+  },
+  backdropImg: {
+    flex: 1,
+    resizeMode: 'cover',
+    position: 'absolute',
+    opacity: 0.25,
+    // padding: -30,
+    top: -30,
+    left: -30,
+    margin: 0,
+    height: 900,
+    width: 800,
   },
 });
 
