@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: "black",
     fontWeight: "700",
-    paddingTop: 80,
+    paddingTop: 40,
     paddingBottom: 15,
     fontFamily: "PlayfairDisplay_400Regular_Italic",
     textAlign: "center",
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     justifyContent: "center",
     alignItems: "center",
-    paddingTop: 80,
+    paddingTop: 60,
     paddingBottom: 0,
   },
 });
