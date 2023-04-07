@@ -109,6 +109,7 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
     fontFamily: "PlayfairDisplay_400Regular_Italic",
     textAlign: "center",
+    
   },
   mainHeader: {
     fontSize: 30,
@@ -118,6 +119,7 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
     fontFamily: "PlayfairDisplay_400Regular_Italic",
     textTransform: "capitalize",
+    textAlign: "center",
   },
   description: {
     fontSize: 20,
@@ -153,7 +155,7 @@ const styles = StyleSheet.create({
     height: 100,
     justifyContent: "center",
     alignItems: "center",
-    paddingLeft: "100",
+    // paddingLeft: "100",
   },
   buttonStyle: {
     borderRadius: 5,
