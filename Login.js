@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: "#FC6D26",
     fontWeight: "500",
-    paddingTop: 20,
+    paddingTop: 10,
     paddingBottom: 15,
     fontFamily: "PlayfairDisplay_400Regular_Italic",
     textTransform: "capitalize",
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
   },
   labels: {
     fontWeight: "bold",
-    // fontSize: 15,
+    fontSize: 15,
     color: "#E24329",
     paddingBottom: 5,
     fontFamily: "PlayfairDisplay_400Regular_Italic",
@@ -165,7 +165,11 @@ const styles = StyleSheet.create({
     marginVertical: 30,
   },
   buttonText: {
-    color: "#eee",
+    color: "#fff",
+    fontSize: 19,
+    fontWeight: "600",
+    letterSpacing: 1.3,
+    
   },
   wrapper: {
     display: "flex",
