@@ -1,8 +1,16 @@
-import { View, Text,Image, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native'
-import React, { useState } from 'react'
-import AppLoading from 'expo-app-loading'
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
+import React, { useState } from "react";
+import AppLoading from "expo-app-loading";
 
-import Checkbox from 'expo-checkbox'
+import Checkbox from "expo-checkbox";
 // import {
 //   useFonts,
 //   JosefinSans_400Regular,
@@ -22,73 +30,69 @@ import {
 } from "@expo-google-fonts/playfair-display";
 
 const Login = () => {
-  const [userName, setUserName] = useState("")
-  const [Password, setpassword] = useState("")
-  const [agree, setAgree] = useState(false)
+  const [userName, setUserName] = useState("");
+  const [Password, setpassword] = useState("");
+  const [agree, setAgree] = useState(false);
 
-  const submit = () =>{
+  const submit = () => {
     if (!userName && !Password) {
-      Alert.alert("Fill the details correctly")
+      Alert.alert("Fill the details correctly");
     } else {
-      Alert.alert(`Welcome to TMS ${userName}`)
-    };
-
-  }
-   return (
-    <View style ={styles.mainContainer}>
-      <Text style ={styles.mainHeader1}>
-        Transportation Management System
-      </Text>
-      <Text style ={styles.mainHeader}>
-        Hi! Welcome!
-      </Text>
-      <Text style ={styles.description}>
-      Enter Login details below:
-      </Text>
+      Alert.alert(`Welcome to TMS ${userName}`);
+    }
+  };
+  return (
+    <View style={styles.mainContainer}>
+      <View style={styles.imageContainer}>
+        <Image
+          style={styles.imageStyle}
+          source={require("./assets/logo.png")}
+        />
+      </View>
+      <Text style={styles.mainHeader1}>Transportation Management System</Text>
+      <Text style={styles.mainHeader}>Hi! Welcome!</Text>
+      <Text style={styles.description}>Enter Login details below:</Text>
       <View style={styles.inputContainer}>
-        <Text style={styles.labels}> Enter your Z-Id :
-        </Text>
-        <TextInput style={styles.inputStyle} autoCapitalize= "none"
-        autoCorrect = "none"
-        placeholder="Z-ID"
-        value = {userName}
-        onChangeText={(actualData) => setUserName (actualData)}/>
+        <Text style={styles.labels}> Enter your Z-Id :</Text>
+        <TextInput
+          style={styles.inputStyle}
+          autoCapitalize="none"
+          autoCorrect="none"
+          placeholder="Z-ID"
+          value={userName}
+          onChangeText={(actualData) => setUserName(actualData)}
+        />
       </View>
 
       <View style={styles.inputContainer}>
-        <Text style={styles.labels}> Enter your Password :
-        </Text>
-        <TextInput style={styles.inputStyle} autoCapitalize= "none"
-        autoCorrect = {false}
-        secureTextEntry = {true}
-        placeholder="Password"
-        value = {Password}
-        onChangeText={(actualData) => setpassword (actualData)}
+        <Text style={styles.labels}> Enter your Password :</Text>
+        <TextInput
+          style={styles.inputStyle}
+          autoCapitalize="none"
+          autoCorrect={false}
+          secureTextEntry={true}
+          placeholder="Password"
+          value={Password}
+          onChangeText={(actualData) => setpassword(actualData)}
         />
       </View>
 
       <View style={styles.wrapper}>
-      <Checkbox 
-      value = {agree}
-      onValueChange={() => setAgree(!agree) }
-      color = {agree ? "#FC6D26" : undefined}
-      />
-        <Text style={styles.wrapperText}>
-   
-          Keep me logged in
-        </Text>
+        <Checkbox
+          value={agree}
+          onValueChange={() => setAgree(!agree)}
+          color={agree ? "#FC6D26" : undefined}
+        />
+        <Text style={styles.wrapperText}>Keep me logged in</Text>
       </View>
-    <TouchableOpacity style={[
-      styles.buttonStyle,
-      {backgroundColor:"#FC6D26"},
-    ]}
-     onPress={() => submit()}
-    >
-      <Text style={styles.buttonText}>Login</Text>
-    </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.buttonStyle, { backgroundColor: "#FC6D26" }]}
+        onPress={() => submit()}
+      >
+        <Text style={styles.buttonText}>Login</Text>
+      </TouchableOpacity>
     </View>
   );
-
 };
 
 const styles = StyleSheet.create({
@@ -101,10 +105,10 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: "black",
     fontWeight: "700",
-    paddingTop: 130,
+    paddingTop: 80,
     paddingBottom: 15,
     fontFamily: "PlayfairDisplay_400Regular_Italic",
-    textAlign: "center"
+    textAlign: "center",
   },
   mainHeader: {
     fontSize: 30,
@@ -145,8 +149,11 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   imageStyle: {
-    width:200,
-    height:100,
+    width: 200,
+    height: 100,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingLeft: "100",
   },
   buttonStyle: {
     borderRadius: 5,
@@ -171,7 +178,12 @@ const styles = StyleSheet.create({
     color: "#7d7d7d",
     fontFamily: "PlayfairDisplay_400Regular_Italic",
   },
+  imageContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: 80,
+    paddingBottom: 0,
+  },
 });
 
-
-export default Login
+export default Login;
