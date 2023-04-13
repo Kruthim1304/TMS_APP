@@ -1,29 +1,30 @@
 import React from 'react';
-import { View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity, ImageBackground } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-
 
 const trucksData = [
     { truckNumber: 'Truck 1', truckOrder: 'Order 123', currentLocation: 'Location 1', currentStatus: 'Status 1' },
     { truckNumber: 'Truck 2', truckOrder: 'Order 456', currentLocation: 'Location 2', currentStatus: 'Status 2' },
     { truckNumber: 'Truck 3', truckOrder: 'Order 789', currentLocation: 'Location 3', currentStatus: 'Status 3' },
   ];
+  
 
 const LandingPage = () => {
     const [searchValue, setSearchValue] = React.useState('');
     const [filteredTrucks, setFilteredTrucks] = React.useState(trucksData);
     const navigation = useNavigation();
+    
   
     const handleSearch = (text) => {
       setSearchValue(text);
-  
+      
       const filteredData = trucksData.filter(truck => {
         return truck.truckNumber.toLowerCase().includes(text.toLowerCase());
       });
-  
+      
       setFilteredTrucks(filteredData);
-    }
-  
+    };
+    
     // const renderTruckItem = ({ item }) => {
     //   return (
     //     <View style={styles.truckItemContainer}>
@@ -51,7 +52,7 @@ const LandingPage = () => {
         <Text style={styles.heading}>Truck Dashboard</Text>
         <TextInput
           style={styles.searchBar}
-          placeholder="Search by License Plate"
+          placeholder="Search Truck Number"
           value={searchValue}
           onChangeText={handleSearch}
         />
@@ -61,7 +62,11 @@ const LandingPage = () => {
           <Text style={styles.tableHeaderText}>Current Location</Text>
           <Text style={styles.tableHeaderText}>Current Status</Text>
         </View>
+        
         <View style={styles.tableLine} />
+        
+        {/*Page break*/}
+        
         {/* <TouchableOpacity
         onPress={() => handleTruckClick(1)}
         style={styles.truckRow}
@@ -92,6 +97,8 @@ const LandingPage = () => {
     );
   };
   
+ 
+   
   const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -100,14 +107,20 @@ const LandingPage = () => {
       heading: {
           fontSize: 30,
           fontWeight: 'bold',
-          color: '#FC6D26',
+          color: '#E24329',
           textAlign: 'center',
           justifyContent: 'center',
           alignItems: 'center',
           marginBottom: 16,
         },
+        placeholder: {
+          color: ''
+        },
       searchBar: {
+        color: '#808080',
         height: 40,
+        width: 350,
+        borderColor: "rgba(0, 0, 0, 0.3)",
         borderWidth: 1,
         borderRadius: 8,
         paddingHorizontal: 16,
@@ -119,7 +132,8 @@ const LandingPage = () => {
       },
       tableHeaderText: {
         flex: 1,
-        fontWeight: 'bold',
+        fontWeight: 'medium',
+        color: '#E24329',
         fontSize: 16,
       },
       truckItemContainer: {
@@ -132,14 +146,14 @@ const LandingPage = () => {
       },
       tableLine: {
         borderBottomWidth: -1,
-        borderBottomColor: '#FC6D26',
+        borderBottomColor: '#000000',
         marginBottom: 8,
       },
       truckRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         borderBottomWidth: 1,
-        borderBottomColor: '#FC6D26',
+        borderBottomColor: '#A9A9A9',
         marginBottom: 8,
       },
       truckNumber: {
@@ -163,6 +177,7 @@ const LandingPage = () => {
         fontSize: 16,
         color: '#000000',
       },
+      
     // container: {
     //   flex: 1,
     //   padding: 16,

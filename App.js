@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View, Text, Image } from 'react-native'
 import React from 'react'
 // import Login from "./Login";
 import { NavigationContainer } from '@react-navigation/native';
@@ -20,11 +20,12 @@ function App() {
         <Stack.Screen 
           name="LandingPage" 
           component={LandingPage}
-          options={{ headerTitle: 'Transport Management' }} />
+          options={{ headerTitle: 'Transportation Management System - Portal'}} />
         <Stack.Screen 
           name="TruckDetails" 
           component={TruckDetails} 
           options={{ headerShown: false }} />
+      
       </Stack.Navigator>
 
     </NavigationContainer>
