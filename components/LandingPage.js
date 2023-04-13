@@ -50,12 +50,18 @@ const LandingPage = () => {
     return (
       <View style={styles.container}>
         <Text style={styles.heading}>Truck Dashboard</Text>
+        <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchBar}
           placeholder="Search Truck Number"
           value={searchValue}
           onChangeText={handleSearch}
         />
+        <TouchableOpacity style={styles.searchButton} onPress={() => console.log('Search pressed')}>
+          <Text style={styles.searchButtonText}>Search</Text>
+        </TouchableOpacity>
+        </View>
+        
         <View style={styles.tableHeaderContainer}>
           <Text style={styles.tableHeaderText}>Truck Number</Text>
           <Text style={styles.tableHeaderText}>Truck Order</Text>
@@ -113,9 +119,6 @@ const LandingPage = () => {
           alignItems: 'center',
           marginBottom: 16,
         },
-        placeholder: {
-          color: ''
-        },
       searchBar: {
         color: '#808080',
         height: 40,
@@ -125,6 +128,18 @@ const LandingPage = () => {
         borderRadius: 8,
         paddingHorizontal: 16,
         marginBottom: 16,
+      },
+      searchContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+      },
+      searchButton: {
+        paddingBottom:10,
+        paddingLeft:30,
+     },
+      searchButtonText: {
+        color: '#E24329',
+        fontWeight: 'bold',
       },
       tableHeaderContainer: {
         flexDirection: 'row',
