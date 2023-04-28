@@ -13,6 +13,11 @@ import {
   import AppLoading from "expo-app-loading";
   import {useNavigation} from '@react-navigation/native';
   import Checkbox from "expo-checkbox";
+  import * as LocalAuthentication from 'expo-local-authentication';
+  import Icon from 'react-native-vector-icons/FontAwesome';
+  import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+
+
   // import {
   //   useFonts,
   //   JosefinSans_400Regular,
@@ -48,6 +53,24 @@ import {
     const handleLogin = () => {
       navigation.navigate('LandingPage');
     };
+
+    const biometricLogin = async () => {
+      let compatible = await LocalAuthentication.hasHardwareAsync();
+      if (!compatible) {
+        Alert.alert('Biometric authentication not available on this device');
+        return;
+      }
+    
+      let result = await LocalAuthentication.authenticateAsync();
+      if (result.success) {
+        Alert.alert('Biometric authentication successful');
+        navigation.navigate('LandingPage');
+      } else {
+        Alert.alert('Biometric authentication failed');
+      }
+    };
+    
+
     return (
       <View style={styles.mainContainer}>
         
@@ -61,7 +84,7 @@ import {
         <View style={styles.imageContainer}>
           <Image
             style={styles.imageStyle}
-            source={require("../assets/logo.png")}
+            source={require("../assets/loadinng.gif")}
           />
         </View>
         <Text style={styles.mainHeader1}>Transportation Management System</Text>
@@ -91,20 +114,31 @@ import {
             onChangeText={(actualData) => setpassword(actualData)}
           />
         </View>
-  
-        <View style={styles.wrapper}>
-          <Checkbox
-            value={agree}
-            onValueChange={() => setAgree(!agree)}
-            color={agree ? "#FC6D26" : undefined}
-          />
-          <Text style={styles.wrapperText}>Keep me logged in</Text>
+      
+        <View style={styles.hintView}>
+          <Text style={styles.hintText}>Hint: Login with Arca password</Text>
         </View>
-        <TouchableOpacity
-          style={[styles.buttonStyle, { backgroundColor: "#FC6D26" }]}
-          onPress={() => handleLogin()}
-        >
-          <Text style={styles.buttonText}>Login</Text>
+
+
+      
+        <TouchableOpacity style={[styles.buttonStyle, { width: "70%",backgroundColor: "#FC6D26", alignSelf: "center",flexDirection: "row", alignItems: "center" }]}
+        onPress={() => handleLogin()}>
+
+          <Text style={styles.buttonText}>Login  </Text>
+          <Icon name="sign-in" size={25} color="white" />
+        </TouchableOpacity>
+
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
+        <View style={{ flex: 1, height: 1, backgroundColor: '#FC6D26' }} />
+        <Text style={{ marginHorizontal: 10,color:"#FC6D26" }}>OR</Text>
+        <View style={{ flex: 1, height: 1, backgroundColor: '#FC6D26' }} />
+        </View>
+
+        <TouchableOpacity style={[styles.buttonStyleBio, { width: "60%",backgroundColor: "#FC6D26", alignSelf: "center",flexDirection: "row", alignItems: "center" }]}
+        onPress={() => biometricLogin()}>
+        
+        <Text style={styles.buttonTextBio}>Use Pin  </Text>
+        <Icon name="th" size={20} color="white" />
         </TouchableOpacity>
       </View>
     );
@@ -179,7 +213,28 @@ import {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      marginVertical: 30,
+      marginVertical: 20,
+      
+    },
+    
+    buttonStyleBio: {
+      borderRadius: 5,
+      paddingVertical: 10,
+      paddingHorizontal: 18,
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      marginVertical: 20,
+
+      
+    },
+
+    buttonTextBio:{
+      color: "#fff",
+      fontSize: 19,
+      fontWeight: "600",
+      letterSpacing: 1,
+
     },
     buttonText: {
       color: "#fff",
@@ -199,6 +254,20 @@ import {
       color: "#7d7d7d",
       fontFamily: "PlayfairDisplay_400Regular_Italic",
     },
+    hintView: {
+      backgroundColor:"#EAEAEA",
+      padding: 10,
+      borderRadius: 5,
+      marginTop: 10,
+      width:"70%",
+    },
+    hintText: {
+      fontSize: 12,
+      fontWeight: 'bold',
+      color: '#E24329',
+      
+    },
+
     imageContainer: {
       justifyContent: "center",
       alignItems: "center",
