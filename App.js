@@ -29,7 +29,7 @@ function App() {
         <Stack.Screen 
           name="LandingPage" 
           component={LandingPage}
-          options={{ headerTitle: 'Transport Management' }} />
+          options={{ headerTitle: 'Transportation Management System' }} />
         <Stack.Screen 
           name="TruckDetails" 
           component={TruckDetails} 

@@ -5,7 +5,7 @@ const LoadingPage = ({ navigation }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       navigation.replace('LandingPage');
-    }, 3000);
+    }, 10000);
     return () => clearTimeout(timer);
   }, [navigation]);
 
@@ -37,3 +37,28 @@ const styles = StyleSheet.create({
 });
 
 export default LoadingPage;
+
+
+
+// import React, { useEffect } from 'react';
+// import { Image, View } from 'react-native';
+
+// const LoadingPage = ({ navigation }) => {
+//   useEffect(() => {
+//     const timer = setTimeout(() => {
+//       navigation.replace('Login');
+//     }, 2000);
+//     return () => clearTimeout(timer);
+//   }, [navigation]);
+
+//   return (
+//     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+//       <Image
+//         source={require('../assets/loader.gif')}
+//         style={{ width: 500, height: 500 }}
+//       />
+//     </View>
+//   );
+// };
+
+// export default LoadingPage;

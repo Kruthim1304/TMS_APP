@@ -63,10 +63,10 @@ import {
     
       let result = await LocalAuthentication.authenticateAsync();
       if (result.success) {
-        Alert.alert('Biometric authentication successful');
+        Alert.alert('Sucessfully entered pin');
         navigation.navigate('LandingPage');
       } else {
-        Alert.alert('Biometric authentication failed');
+        Alert.alert('Wrong Pin, check ID or Password');
       }
     };
     
@@ -77,7 +77,7 @@ import {
         <View style={styles.backdrop}>
         <Image
             style={styles.backdropImg}
-            source={require("../assets/bg2.png")}
+            source={require("../assets/image001.png")}
           />
         </View>
   
@@ -97,6 +97,7 @@ import {
             autoCapitalize="none"
             autoCorrect="none"
             placeholder="Z-ID"
+            placeholderTextColor="white" 
             value={userName}
             onChangeText={(actualData) => setUserName(actualData)}
           />
@@ -110,6 +111,7 @@ import {
             autoCorrect={false}
             secureTextEntry={true}
             placeholder="Password"
+            placeholderTextColor="white" 
             value={Password}
             onChangeText={(actualData) => setpassword(actualData)}
           />
@@ -152,7 +154,7 @@ import {
     },
     mainHeader1: {
       fontSize: 30,
-      color: "black",
+      color: "white",           /*black*/
       fontWeight: "700",
       paddingTop: 40,
       paddingBottom: 15,
@@ -172,7 +174,7 @@ import {
     },
     description: {
       fontSize: 20,
-      color: "#7d7d7d",
+      color: "#b5b8c7",
       paddingBottom: 5,
       fontFamily: "PlayfairDisplay_400Regular_Italic",
       lineHeight: 25,
@@ -191,7 +193,7 @@ import {
     },
     inputStyle: {
       borderWidth: 1,
-      borderColor: "rgba(0, 0, 0, 0.3)",
+      borderColor: "white", /*rgba(0, 0, 0, 0.3) */
       paddingHorizontal: 15,
       paddingVertical: 10,
       borderRadius: 5,
@@ -282,7 +284,7 @@ import {
       flex: 1,
       resizeMode: 'cover',
       position: 'absolute',
-      opacity: 0.25,
+      opacity: 1,
       top: -30,
       left: -30,
       // height: 100,

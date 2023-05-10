@@ -1,66 +1,147 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text,StyleSheet,Image } from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
+import axios from 'axios';
 
-const TruckDetails = ({ route }) => {
-  const { truckId } = route.params;
-  const [truckDetails, setTruckDetails] = useState(null);
+const TruckMap = () => {
+  const [truckDetails, setTruckDetails] = useState([]);
+  const [selectedTruck, setSelectedTruck] = useState(null);
 
   useEffect(() => {
-    const fetchTruckDetails = async () => {
+    const fetchTruckData = async () => {
       try {
-        const response = await fetch(`https://api.example.com/trucks/${truckId}`);
-        const data = await response.json();
-        setTruckDetails(data);
+        const response = await axios.get('http://zingtrack.com/GPSRestWebService/rest/GetTripData/json?API_KEY=CST22ZTTRIPRNIPLAPI&PLANT=RNAIPL');
+        const data = response.data;
+        const trucks = [];
+
+        data.tripList.forEach(truck => {
+          const truckData = {
+            truckNumber: truck.truckNo,
+            latitude: truck.currentLat,
+            longitude: truck.currentLog,
+            currentLocation: truck.currentLoc,
+            nextLocation: truck.nextLoc,
+            distanceTravelled: truck.disCovered,
+            totalDistance: truck.totalDis
+          };
+
+          trucks.push(truckData);
+        });
+
+        setTruckDetails(trucks);
       } catch (error) {
-        console.error('Error fetching truck details:', error);
+        console.error('Error:', error);
       }
     };
 
-    fetchTruckDetails();
-  }, [truckId]);
+    fetchTruckData();
+  }, []);
+
+  const handleMarkerPress = truckNumber => {
+    const selectedTruck = truckDetails.find(truck => truck.truckNumber === truckNumber);
+    setSelectedTruck(selectedTruck);
+  };
 
   return (
-    <View style={styles.container}>
-      {truckDetails ? (
-        <>
-          <Text style={styles.heading}>Truck Details</Text>
-          <Text style={styles.label}>Truck Number:</Text>
-          <Text style={styles.value}>{truckDetails.truckNumber}</Text>
-          <Text style={styles.label}>Truck Order:</Text>
-          <Text style={styles.value}>{truckDetails.truckOrder}</Text>
-          <Text style={styles.label}>Current Location:</Text>
-          <Text style={styles.value}>{truckDetails.currentLocation}</Text>
-          <Text style={styles.label}>Current Status:</Text>
-          <Text style={styles.value}>{truckDetails.currentStatus}</Text>
-        </>
-      ) : (
-        <Text>Loading truck details...</Text>
+    <View style={{ flex: 1 }}>
+      <View style={styles.backdrop}>
+        <Image
+            style={styles.backdropImg}
+            source={require("../assets/image001.png")}
+          />
+        </View>
+        <View>
+        <Text style={styles.heading}> Truck Tracking:  </Text>
+        </View>
+      <MapView
+        style={{ flex: 0 ,height:455,margin:15,marginTop:10,borderRadius:10 }}
+        initialRegion={{
+          latitude: 23.0,
+          longitude: 77.0,
+          latitudeDelta: 10.0,
+          longitudeDelta: 10.0,
+        }}
+      >
+        {truckDetails.map(truck => (
+          <Marker
+            key={truck.truckNumber}
+            coordinate={{ latitude: truck.latitude, longitude: truck.longitude }}
+            title={`Truck No: ${truck.truckNumber}`}
+            onPress={() => handleMarkerPress(truck.truckNumber)}
+          />
+        ))}
+      </MapView>
+
+      <View >
+      <Text style={styles.status}> Status: </Text>
+      </View>
+
+      { selectedTruck && (
+        <View style={styles.textdata}>
+          <Text style={styles.textdatatext}>Truck Number: {selectedTruck.truckNumber}</Text>
+          <Text style={styles.textdatatext}>Current Location: {selectedTruck.currentLocation}</Text>
+          <Text style={styles.textdatatext}>Next Location: {selectedTruck.nextLocation}</Text>
+          <Text style={styles.textdatatext}>Distance Travelled: {selectedTruck.distanceTravelled}</Text>
+          <Text style={styles.textdatatext}>Total Distance: {selectedTruck.totalDistance}</Text>
+        </View>
       )}
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  heading: {
-    fontSize: 24,
-    color: '#FC6D26',
-    marginBottom: 16,
-  },
-  label: {
-    fontSize: 16,
-    color: '#000000',
+
+const styles = StyleSheet.create({ 
+
+  textdatatext:{
+    color: "black",
+    width:"95%",
+    padding: 3,
     fontWeight: 'bold',
-    marginBottom: 8,
+    fontSize: 13,
   },
-  value: {
-    fontSize: 16,
-    color: '#000000',
-    marginBottom: 16,
+textdata: {
+    color: '#FC6D26',
+    backgroundColor:"white",
+    borderRadius: 10,
+    width:"95%",
+    padding: 8,
+    margin: 10,
   },
+
+  heading: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: '#FC6D26',
+    marginTop: 70,
+    marginLeft: 10,
+    marginBottom:10,
+  },
+
+status:{
+  borderRadius: 10,
+  fontWeight: 'bold',
+  color: "#FC6D26",
+  width:"25%",
+  fontSize:20,
+  padding: 10,
+},
+
+backdrop: {
+  zIndex: -1,
+},
+
+backdropImg: {
+  flex: 1,
+  resizeMode: 'cover',
+  position: 'absolute',
+  opacity: 1,
+  top: -30,
+  left: -30,
+  // height: 100,
+  // margin: 0,
+  height: 900,
+  width: 500,
+},
 });
 
-export default TruckDetails;
+export default TruckMap;

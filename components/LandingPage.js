@@ -104,11 +104,10 @@ const LandingPage = () => {
           onChangeText={handleSearch}
         />
         <View style={styles.tableHeaderContainer}>
-          <Text style={styles.tableHeaderText}>Vehicle ID</Text>
-          <Text style={styles.tableHeaderText}>Location</Text>
+          <Text style={styles.tableHeaderText}>Truck No.</Text>
+          <Text style={styles.tableHeaderText}>Current Location</Text>
           <Text style={styles.tableHeaderText}>Current Lat, Long</Text>
-          <Text style={styles.tableHeaderText}>Date Time</Text>
-          <Text style={styles.tableHeaderText}>Daily Mileage</Text>
+          <Text style={styles.tableHeaderText}>Current Status</Text>
 
         </View>
         {/* <ScrollView horizontal contentContainerStyle={styles.tableContainer}> */}
@@ -191,6 +190,7 @@ const LandingPage = () => {
       tableHeaderText: {
         flex: 1,
         fontWeight: 'bold',
+        color: "#FC6D26",
         fontSize: 16,
       },
       truckDetailsContainer: {
