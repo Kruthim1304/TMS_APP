@@ -125,22 +125,17 @@ status:{
   fontSize:20,
   padding: 10,
 },
-
 backdrop: {
-  zIndex: -1,
-},
-
-backdropImg: {
   flex: 1,
-  resizeMode: 'cover',
   position: 'absolute',
-  opacity: 1,
-  top: -30,
-  left: -30,
-  // height: 100,
-  // margin: 0,
-  height: 900,
-  width: 500,
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+},
+backdropImg: {
+flex: 1,
+resizeMode: 'cover',
 },
 });
 

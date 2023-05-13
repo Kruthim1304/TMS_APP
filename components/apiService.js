@@ -10,3 +10,8 @@ export const fetchTruckData = async () => {
     throw error;
   }
 };
+
+
+
+
+// 

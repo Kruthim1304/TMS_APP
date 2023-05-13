@@ -17,24 +17,6 @@ import {
   import Icon from 'react-native-vector-icons/FontAwesome';
   import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
-
-  // import {
-  //   useFonts,
-  //   JosefinSans_400Regular,
-  //   JosefinSans_400Light,
-  //   JosefinSans_500Medium,
-  // } from "@expo-google-fonts/josefin-sans";
-  // // import { Nunito_600SemiBold, Nunito_700Bold } from "@expo-google-fonts/nunito";
-  import {
-    useFonts,
-    PlayfairDisplay_400Regular,
-    PlayfairDisplay_500Medium,
-    PlayfairDisplay_600SemiBold,
-    PlayfairDisplay_700Bold,
-    PlayfairDisplay_800ExtraBold,
-    PlayfairDisplay_900Black,
-    PlayfairDisplay_400Regular_Italic,
-  } from "@expo-google-fonts/playfair-display";
   
   const Login = () => {
     const navigation = useNavigation();
@@ -158,7 +140,6 @@ import {
       fontWeight: "700",
       paddingTop: 40,
       paddingBottom: 15,
-      fontFamily: "PlayfairDisplay_400Regular_Italic",
       textAlign: "center",
       
     },
@@ -168,7 +149,6 @@ import {
       fontWeight: "500",
       paddingTop: 10,
       paddingBottom: 15,
-      fontFamily: "PlayfairDisplay_400Regular_Italic",
       textTransform: "capitalize",
       textAlign: "center",
     },
@@ -176,7 +156,6 @@ import {
       fontSize: 20,
       color: "#b5b8c7",
       paddingBottom: 5,
-      fontFamily: "PlayfairDisplay_400Regular_Italic",
       lineHeight: 25,
     },
   
@@ -188,7 +167,6 @@ import {
       fontSize: 15,
       color: "#E24329",
       paddingBottom: 5,
-      fontFamily: "PlayfairDisplay_400Regular_Italic",
       lineHeight: 25,
     },
     inputStyle: {
@@ -249,12 +227,10 @@ import {
       display: "flex",
       flexDirection: "row",
       marginTop: 20,
-      fontFamily: "PlayfairDisplay_400Regular_Italic",
     },
     wrapperText: {
       marginLeft: 10,
       color: "#7d7d7d",
-      fontFamily: "PlayfairDisplay_400Regular_Italic",
     },
     hintView: {
       backgroundColor:"#EAEAEA",
@@ -276,22 +252,20 @@ import {
       paddingTop: 60,
       paddingBottom: 0,
     },
-    
     backdrop: {
-      zIndex: -1,
-    },
-    backdropImg: {
       flex: 1,
-      resizeMode: 'cover',
       position: 'absolute',
-      opacity: 1,
-      top: -30,
-      left: -30,
-      // height: 100,
-      // margin: 0,
-      height: 900,
-      width: 800,
-    },
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+  },
+  
+  backdropImg: {
+    flex: 1,
+    resizeMode: 'cover',
+    
+  },
   });
   
   export default Login;

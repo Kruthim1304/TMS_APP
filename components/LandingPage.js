@@ -1,382 +1,298 @@
-import React from 'react';
-import { TouchableOpacity, StyleSheet, Text, View, ImageBackground } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
+import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 
-export default function Page() {
-  const navigation = useNavigation();
 
-  const handleTilePress = (routename) => {
-    navigation.navigate('TruckDetails');
+const LandingPage = () => {
+  const [truckStatuses, setTruckStatuses] = useState({
+    aheadAndParkedCount: 0,
+    aheadAndMovingCount: 0,
+    delayAndParkedCount: 0,
+    delayAndMovingCount: 0,
+  });
+  const [showTable, setShowTable] = useState(false);
+  const [truckData, setTruckData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          'http://zingtrack.com/GPSRestWebService/rest/GetTripData/json?API_KEY=CST22ZTTRIPRNIPLAPI&PLANT=RNAIPL'
+        );
+        const data = response.data;
+
+        let aheadAndParkedCount = 0;
+        let aheadAndMovingCount = 0;
+        let delayAndParkedCount = 0;
+        let delayAndMovingCount = 0;
+
+        data.tripList.forEach((truck) => {
+          if (truck.truckSts === 'Ahead & Parked') {
+            aheadAndParkedCount++;
+          } else if (truck.truckSts === 'Ahead & Moving') {
+            aheadAndMovingCount++;
+          } else if (truck.truckSts === 'Delay & Parked') {
+            delayAndParkedCount++;
+          } else if (truck.truckSts === 'Delay & Moving') {
+            delayAndMovingCount++;
+          }
+        });
+
+        setTruckStatuses({
+          aheadAndParkedCount,
+          aheadAndMovingCount,
+          delayAndParkedCount,
+          delayAndMovingCount,
+        });
+
+        setTruckData(data.tripList);
+        setShowTable(true);
+      } catch (error) {
+        console.log('Error:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const fetchTruckData = (status) => {
+    axios
+      .get(
+        `http://zingtrack.com/GPSRestWebService/rest/GetTripData/json?API_KEY=CST22ZTTRIPRNIPLAPI&PLANT=RNAIPL&STATUS=${status}`
+      )
+      .then((response) => {
+        const data = response.data;
+        const filteredData = data.tripList.filter((truck) => truck.truckSts === status);
+        setTruckData(filteredData);
+        setShowTable(true);
+      })
+      .catch((error) => {
+        console.log('Error:', error);
+      });
   };
 
+ 
+const fetchAllTruckData = () => {
+  axios
+    .get(
+      'http://zingtrack.com/GPSRestWebService/rest/GetTripData/json?API_KEY=CST22ZTTRIPRNIPLAPI&PLANT=RNAIPL'
+    )
+    .then((response) => {
+      const data = response.data;
+      setTruckData(data.tripList);
+      setShowTable(true);
+    })
+    .catch((error) => {
+      console.log('Error:', error);
+    });
+};
+
+
+const navigation = useNavigation();
+
+const handleTruckNumberClick = (truckNumber, currentLocation) => {
+  navigation.navigate('TruckDetails', { truckNumber, currentLocation });
+};
+
+
   return (
-    <ImageBackground source={require('./assets/background.png')} style={styles.backgroundImage} resizeMode="contain">
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+
       <View style={styles.container}>
-        <Text style={[styles.summaryHeading, { color: '#FC6D26' }]}>Truck Status Summary:</Text>
-
-        <View style={styles.headingTile}>
-          <Text style={styles.headingText}>Ahead & Parked: 7</Text>
-          <Text style={styles.headingText}>Ahead & Moving: 2</Text>
-          <Text style={styles.headingText}>Delayed & Parked: 2</Text>
+      <View style={styles.backdrop}>
+        <Image
+            style={styles.backdropImg}
+            source={require("../assets/image001.png")}
+          />
         </View>
-        
-        <Text style={[styles.summaryHeading, { color: '#FC6D26' }]}>Truck Number:</Text>
-
-        <TouchableOpacity style={styles.tile} onPress={() => handleTilePress('TruckDetails')}>
-          <Text style={styles.tileText}>RJ14GN5363</Text>
+        <View>
+        <Text style={styles.heading}> Truck Summary :  </Text>
+        </View>
+        <View style={styles.row}>
+       
+          <TouchableOpacity style={styles.box} onPress={() => fetchTruckData('Ahead & Parked')}>
+            <Text style={styles.label}>Ahead & Parked</Text>
+            <Text style={styles.count}>{truckStatuses.aheadAndParkedCount}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.box} onPress={() => fetchTruckData('Ahead & Moving')}>
+            <Text style={styles.label}>Ahead & Moving</Text>
+            <Text style={styles.count}>{truckStatuses.aheadAndMovingCount}</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.row}>
+          <TouchableOpacity style={styles.box} onPress={() => fetchTruckData('Delay & Parked')}>
+            <Text style={styles.label}>Delay & Parked</Text>
+            <Text style={styles.count}>{truckStatuses.delayAndParkedCount}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.box} onPress={() => fetchTruckData('Delay & Moving')}>
+            <Text style={styles.label}>Delay & Moving</Text>
+            <Text style={styles.count}>{truckStatuses.delayAndMovingCount}</Text>
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity style={styles.allButton} onPress={fetchAllTruckData}>
+          <Text style={styles.allButtonText}>All</Text>
         </TouchableOpacity>
+        {showTable && (
+          <View style={styles.tableContainer}>
+            <Text style={styles.tableHeading}>Truck Data : </Text>
+            <View style={styles.table}>
+              <View style={styles.tableRow}>
+                <Text style={styles.tableHeader}>Truck Number</Text>
+                <View style={styles.verticalLine} />
 
-        <TouchableOpacity style={styles.tile} onPress={() => handleTilePress('TruckDetails')}>
-          <Text style={styles.tileText}>NL01AAF3841</Text>
-        </TouchableOpacity>
+                <Text style={styles.tableHeader}>Status</Text>
+                <View style={styles.verticalLine} />
 
-        <TouchableOpacity style={styles.tile} onPress={() => handleTilePress('TruckDetails')}>
-          <Text style={styles.tileText}>NL01AF3844</Text>
-        </TouchableOpacity>
+                <Text style={styles.tableHeader}>Current Location</Text>
+                <View style={styles.verticalLine} />
 
-        <TouchableOpacity style={styles.tile} onPress={() => handleTilePress('TruckDetails')}>
-          <Text style={styles.tileText}>HR55AK1223</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.tile} onPress={() => handleTilePress('TruckDetails')}>
-          <Text style={styles.tileText}>RJ14GP8417</Text>
-        </TouchableOpacity>
+                <Text style={styles.tableHeader}>ETA</Text>
+              </View>
+              {truckData.map((truck) => (
+                <TouchableOpacity
+                style={styles.tableRow}
+                key={truck.truckNo}
+                onPress={() =>
+                  handleTruckNumberClick(truck.truckNo, truck.currentLoc)
+                }
+              >
+                <Text style={styles.tableCell}>{truck.truckNo}</Text>
+                <View style={styles.verticalLine} />
+                <Text style={styles.tableCell}>{truck.truckSts}</Text>
+                <View style={styles.verticalLine} />
+                <Text style={styles.tableCell}>{truck.currentLoc}</Text>
+                <View style={styles.verticalLine} />
+                <Text style={styles.tableCell}>{truck.eta}</Text>
+              </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        )}
       </View>
-    </ImageBackground>
+    </ScrollView>
   );
-}
+};
+
+
 
 const styles = StyleSheet.create({
-  backgroundImage: {
-    flex: 1,
-    resizeMode: 'contain',
+  scrollContainer: {
+    flexGrow: 1,
   },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 16,
+    padding: 5,
   },
-  summaryHeading: {
+  heading: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: '#FC6D26',
+    marginTop: 30,
+    marginLeft: 10,
+    marginBottom:10,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 5,
+  },
+  box: {
+    width: 130,
+    height: 60,
+    backgroundColor: 'gray',
+    borderRadius: 5,
+    margin: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  label: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: 'white',
+    padding : 2,
+  },
+  count: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 16,
+    color: 'white',
   },
-  headingTile: {
-    backgroundColor: 'rgba(255,255,255,0.7)', // Whitish translucent color
-    width: '80%',
-    maxWidth: 400,
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-    marginBottom: 20,
-    borderRadius: 8,
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+  tableContainer: {
+    marginTop: 0,
   },
-  headingText: {
-    fontSize: 16,
+  tableHeading: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    margin: 10,
+    color:'#FC6D26',
+
+
+  },
+  table: {
+    borderWidth: 2,
+    borderColor: '#FC6D26',
+  },
+  tableRow: {
+    flexDirection: 'row',
+    borderBottomWidth: 2,
+    borderBottomColor: '#FC6D26',
+    paddingVertical: 8,
+  },
+  tableHeader: {
+    flex: 1,
+    paddingVertical: 10,
+    paddingHorizontal: 8,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 8,
+    fontSize: 14,
+    color:'#f8a145',
+  
   },
-  tile: {
-    backgroundColor: 'rgba(255,255,255,0.7)', // Whitish translucent color
-    width: '80%',
-    maxWidth: 400,
-    height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 10,
-    borderRadius: 8,
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowColor: '#000000',
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+  tableCell: {
+    flex: 1,
+    paddingVertical: 10,
+    paddingHorizontal: 5,
+    textAlign: 'center',
+    fontSize : 12,
+    fontWeight:'bold',
+    color:'white',
+    justifyContent: 'center', 
+
   },
-  tileText: {
-    fontSize: 18,
+
+  verticalLine: {
+    width: 2,
+    backgroundColor: '#FC6D26',
+  },
+
+  allButton: {
+    alignSelf: 'center',
+    alignItems:'center',
+    backgroundColor: 'gray',
+    width:60,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 5,
+  },
+  allButtonText: {
+    color: 'white',
     fontWeight: 'bold',
-    color: '#000000',
   },
+  
+backdrop: {
+    flex: 1,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+},
+
+backdropImg: {
+  flex: 1,
+  resizeMode: 'cover',
+},
 });
 
-
-
-// import React, { useState, useEffect, Component } from 'react';
-// import { View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity } from 'react-native';
-// import {useNavigation} from '@react-navigation/native';
-// import axios from 'axios';
-// import { ScrollView } from 'react-native-web';
-// import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
-
-
-
-// // const trucksData = [
-// //     { truckNumber: 'Truck 1', truckOrder: 'Order 123', currentLocation: 'Location 1', currentStatus: 'Status 1' },
-// //     { truckNumber: 'Truck 2', truckOrder: 'Order 456', currentLocation: 'Location 2', currentStatus: 'Status 2' },
-// //     { truckNumber: 'Truck 3', truckOrder: 'Order 789', currentLocation: 'Location 3', currentStatus: 'Status 3' },
-// //   ];
-
-// const LandingPage = () => {
-//     const [searchValue, setSearchValue] = React.useState('');
-//     const [filteredTrucks, setFilteredTrucks] = React.useState(trucksData);
-//     const navigation = useNavigation();
-//     const [trucksData, setTrucksData] = useState([]);
-
-//     // useEffect(() => {
-//     //   axios
-//     //     .get('http://zingtrack.com/GPSRestWebService/rest/GetOnlineData/json?API_KEY=CST22ZTRNIPLMRAPI&VEHICLE_ID=ALL')
-//     //     .then((response) => {
-//     //       // Set fetched trucks data to state
-//     //       setTrucksData(response.data);
-//     //     })
-//     //     .catch((error) => {
-//     //       console.error('Error fetching trucks data:', error);
-//     //     });
-//     // }, []);
-
-
-
-//     useEffect(() => {
-//       const fetchTrucksData = async () => {
-//         try {
-//           const response = await fetch('http://zingtrack.com/GPSRestWebService/rest/GetOnlineData/json?API_KEY=CST22ZTRNIPLMRAPI&VEHICLE_ID=ALL'); 
-          
-//           const data = await response.json();
-//           setTrucksData(data);
-//         } catch (error) {
-//           console.error('Failed to fetch truck data', error);
-//         }
-//       };
-
-//       fetchTrucksData();
-//     }, []);
-  
-//     const handleSearch = (text) => {
-//       setSearchValue(text);
-  
-//       const filteredData = trucksData.filter(truck => {
-//         return truck.truckNumber.toLowerCase().includes(text.toLowerCase());
-//       });
-  
-//       setFilteredTrucks(filteredData);
-//     }
-  
-//     // const renderTruckItem = ({ item }) => {
-//     //   return (
-//     //     <View style={styles.truckItemContainer}>
-//     //       <Text style={styles.truckItemText}>{item.truckNumber}</Text>
-//     //       <Text style={styles.truckItemText}>{item.truckOrder}</Text>
-//     //       <Text style={styles.truckItemText}>{item.currentLocation}</Text>
-//     //       <Text style={styles.truckItemText}>{item.currentStatus}</Text>
-//     //     </View>
-//     //   );
-//     // }
-
-
-//     // const renderTruckRow = ({ item }) => (
-//     //     <TouchableOpacity style={styles.truckRow} onPress={() => handleTruckPress(item.id)}>
-//     //       <Text style={styles.truckNumber}>{item.truckNumber}</Text>
-//     //       <Text style={styles.truckOrder}>{item.truckOrder}</Text>
-//     //       <Text style={styles.currentLocation}>{item.currentLocation}</Text>
-//     //       <Text style={styles.currentStatus}>{item.currentStatus}</Text>
-//     //     </TouchableOpacity>
-//     //   );
-
-//     const renderTruckRow = ({ item }) => (
-//       <TouchableOpacity style={styles.truckRow} onPress={() => handleTruckPress(item.id)}>
-//         <Text style={styles.truckNumber} numberOfLines={1} >{item.vehicleId}</Text>
-//         <View style = {styles.truckDetailsContainer}>
-//         <Text style={styles.truckAddress} numberOfLines={1}>{item.address}</Text>
-//         <Text style={styles.currentLocation} numberOfLines={1} >{item.latitude}, {item.longitude}</Text>
-//         <Text style={styles.dateTime} numberOfLines={1} >{item.dateTime}</Text>
-//         <Text style={styles.dailyMileage} numberOfLines={1} >{item.dailyMileage}</Text>
-//         </View>
-//       </TouchableOpacity>
-//     );
-//     const handleTruckPress = (truckId) => {
-//         navigation.navigate('TruckDetails', { truckId });
-//       };
-  
-//     return (
-//       <View style={styles.container}>
-//         <Text style={styles.heading}>Truck Dashboard</Text>
-//         <TextInput
-//           style={styles.searchBar}
-//           placeholder="Search by License Plate"
-//           value={searchValue}
-//           onChangeText={handleSearch}
-//         />
-//         <View style={styles.tableHeaderContainer}>
-//           <Text style={styles.tableHeaderText}>Truck No.</Text>
-//           <Text style={styles.tableHeaderText}>Current Location</Text>
-//           <Text style={styles.tableHeaderText}>Current Lat, Long</Text>
-//           <Text style={styles.tableHeaderText}>Current Status</Text>
-
-//         </View>
-//         {/* <ScrollView horizontal contentContainerStyle={styles.tableContainer}> */}
-//         <FlatList
-//         data={trucksData.onlineDataList}
-//         renderItem={renderTruckRow}
-//         keyExtractor={(item, index) => index.toString()}
-//         style={styles.table}
-        
-//       />
-//       {/* </ScrollView> */}
-      
-//         {/* <View style={styles.tableLine} />
-//         <TouchableOpacity
-//         onPress={() => handleTruckClick(1)}
-//         style={styles.truckRow}
-//       >
-//         <Text style={styles.truckNumber}>Truck #1</Text>
-//         <Text style={styles.truckOrder}>Truck Order</Text>
-//         <Text style={styles.currentLocation}>Current Location</Text>
-//         <Text style={styles.currentStatus}>Current Status</Text>
-//       </TouchableOpacity> */}
-//       {/* <FlatList
-//         data={trucksData.onlineDataList}
-//         renderItem={renderTruckRow}
-//         keyExtractor={(item, index) => index.toString()}
-//         style={styles.truckList}
-//       /> */}
-//         {/* {trucksData.onlineDataList.map(truck => (
-//         <TouchableOpacity
-//         key={truck.truckNumber}
-//         onPress={() => handleTruckClick(truck.truckNumber)}
-//         style={styles.truckRow}
-//       >
-//         <Text style={styles.truckNumber}>{truck.truckNumber}</Text>
-//           <Text style={styles.truckOrder}>{truck.truckOrder}</Text>
-//           <Text style={styles.currentLocation}>{truck.currentLocation}</Text>
-//           <Text style={styles.currentStatus}>{truck.currentStatus}</Text>
-//       </TouchableOpacity>
-//         ))} */}
-//       </View>
-//     //   <View style={styles.container}>
-//     //   <Text style={styles.heading}>Truck Dashboard</Text>
-//     //   <FlatList
-//     //     data={trucksData.onlineDataList}
-//     //     renderItem={renderTruckRow}
-//     //     keyExtractor={(item, index) => index.toString()}
-//     //     style={styles.table}
-//     //   />
-//     // </View>
-
-//     );
-//   };
-  
-//   const styles = StyleSheet.create({
-//     container: {
-//         flex: 1,
-//         padding: 16,
-//       },
-//       heading: {
-//           fontSize: 30,
-//           fontWeight: 'bold',
-//           color: '#FC6D26',
-//           textAlign: 'center',
-//           justifyContent: 'center',
-//           alignItems: 'center',
-//           marginBottom: 16,
-//         },
-//       searchBar: {
-//         height: 40,
-//         borderWidth: 1,
-//         borderRadius: 8,
-//         paddingHorizontal: 16,
-//         marginBottom: 16,
-//       },
-//       tableHeaderContainer: {
-//         flexDirection: 'row',
-//         marginBottom: 8,
-//       },
-//       tableHeaderText: {
-//         flex: 1,
-//         fontWeight: 'bold',
-//         color: "#FC6D26",
-//         fontSize: 16,
-//       },
-//       truckDetailsContainer: {
-//         flex: 4,
-//         marginLeft: 16,
-//       },
-//       truckItemContainer: {
-//         flexDirection: 'column',
-//         marginBottom: 8,
-//       },
-//       truckItemText: {
-//         flex: 1,
-//         fontSize: 16,
-//       },
-//       tableLine: {
-//         borderBottomWidth: 1,
-//         borderBottomColor: '#FC6D26',
-//         marginBottom: 8,
-//       },
-//       truckRow: {
-//         flexDirection: 'row',
-//         alignItems: 'center',
-//         justifyContent: 'space-between',
-//         paddingVertical: 0,
-//         borderBottomWidth: 1,
-//         borderBottomColor: '#FC6D26',
-//         marginBottom: 8,
-//       },
-//       truckNumber: {
-//         flex: 1,
-//         width: 0,
-//         fontSize: 14,
-//         fontWeight: 'bold',
-//         color: '#000000',
-//         overflow: 'hidden',
-//       },
-//       truckOrder: {
-//         flex: 2,
-//         marginBottom: 4,
-//         fontSize: 14,
-//         color: '#000000',
-//         overflow: 'hidden',
-//       },
-//       truckAddress: {
-//         flex: 1,
-//         // width: 80,
-//         fontSize: 14,
-//         color: '#000000',
-//         overflow: 'hidden',
-//       },
-//       dateTime: {
-//         flex: 1,
-//         fontSize: 14,
-//         // width : 80,
-//         color: '#000000',
-//         overflow: 'hidden',
-//       },
-//       dailyMileage: {
-//         flex: 1,
-//         fontSize: 14,
-//         color: '#000000',
-//         overflow: 'hidden',
-//       },
-//       currentStatus: {
-//         flex: 1,
-//         fontSize: 14,
-//         color: '#000000',
-//         overflow: 'hidden',
-//         // width: 80,
-//       },
-//       table: {
-//         flex: 1,
-//         marginTop: 16,
-//       },
-//       tableContainer: {
-//         width: '100%',
-//       },
-//   });
-
-// export default LandingPage;
+export default LandingPage;
