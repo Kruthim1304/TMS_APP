@@ -3,7 +3,7 @@ import { View, Text,StyleSheet,Image } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import axios from 'axios';
 
-const TruckMap = () => {
+const TruckDetails = () => {
   const [truckDetails, setTruckDetails] = useState([]);
   const [selectedTruck, setSelectedTruck] = useState(null);
 
@@ -139,4 +139,4 @@ resizeMode: 'cover',
 },
 });
 
-export default TruckMap;
+export default TruckDetails;

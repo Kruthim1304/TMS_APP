@@ -7,6 +7,7 @@ import LandingPage from './components/LandingPage';
 import TruckDetails from './components/TruckDetails';
 import WelcomePage from './components/Welcome';
 import LoadingPage from './components/Loading';
+import MapScreen from './components/MapScreen';
 
 const Stack = createStackNavigator();
 
@@ -23,8 +24,8 @@ function App() {
           component={Login} 
           options={{ headerShown: false }} />
         <Stack.Screen 
-          name="Loading" 
-          component={LoadingPage} 
+          name="MapScreen" 
+          component={MapScreen} 
           options={{ headerShown: false }} />
         <Stack.Screen 
           name="LandingPage" 
