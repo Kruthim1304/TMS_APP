@@ -3,12 +3,15 @@ import { View, Text, TouchableOpacity, StyleSheet, Image, Navigation } from 'rea
 
 const MenuPage = ({ navigation }) => {
   const menuItems = [
-    { name: 'Truck Tracking', icon: require('./assets/1.png'), route: 'MapScreen' },
-    { name: 'Milk Run Status', icon: require('./assets/2.png') },
-    { name: 'Analytics', icon: require('./assets/3.png') },
-    { name: 'Warehouse Management', icon: require('./assets/4.png') },
-    { name: 'Load Optimization', icon: require('./assets/5.png') },
-    { name: 'Communication', icon: require('./assets/6.png') },
+    { name: 'Truck Tracking', icon: require('../assets/1.png'), route: 'MapScreen' },
+    { name: 'Milk Run Actual', icon: require('../assets/2.png') },
+    { name: 'Analytics', icon: require('../assets/3.png') },
+    { name: 'Warehouse Management', icon: require('../assets/4.png') },
+    { name: 'Load Optimization', icon: require('../assets/5.png') },
+    { name: 'Communication Support', icon: require('../assets/6.png') },
+    { name: 'Inventory Control', icon: require('../assets/7.png') },
+    { name: 'Fleet Maintenance', icon: require('../assets/8.png') },
+    { name: 'Driver Management', icon: require('../assets/9.png') },
   ];
 
   const handleMenuItemPress = (route) => {
@@ -19,10 +22,10 @@ const MenuPage = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Image source={require('./assets/background.png')} style={styles.backgroundImage} />
+      <Image source={require('../assets/background.png')} style={styles.backgroundImage} />
       <View style={styles.content}>
         <View style={styles.headingContainer}>
-          <Text style={styles.heading}>Menu</Text>
+          <Text style={styles.heading}>Menu : </Text>
         </View>
         <View style={styles.menuContainer}>
           {menuItems.map((item, index) => (
@@ -37,6 +40,7 @@ const MenuPage = ({ navigation }) => {
               <Text style={styles.itemText}>{item.name}</Text>
             </TouchableOpacity>
           ))}
+          
         </View>
       </View>
     </View>
@@ -57,11 +61,11 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    justifyContent: 'center',
+    // justifyContent: 'center',
+    marginTop:50,
     alignItems: 'center',
   },
   headingContainer: {
-    marginTop: 50,
     marginBottom: 20,
   },
   heading: {
@@ -78,7 +82,7 @@ const styles = StyleSheet.create({
   },
   item: {
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 30,
     width: '30%',
   },
   tile: {
@@ -96,6 +100,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
     color: '#ffffff',
+    fontWeight:'bold',
+
   },
 });
 

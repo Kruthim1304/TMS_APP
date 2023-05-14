@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
     color: '#FC6D26',
-    marginTop: 70,
+    marginTop: 20,
     marginLeft: 10,
 
   },
@@ -183,8 +183,8 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: 'rgba(255, 87, 51, 0.85)',
-    padding: 12,
-    marginTop:15,
+    padding: 8,
+    marginTop:10,
     borderRadius: 3,
     margin:8,
   },

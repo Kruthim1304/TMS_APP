@@ -33,7 +33,7 @@ import {
     };
 
     const handleLogin = () => {
-      navigation.navigate('MapScreen');
+      navigation.navigate('Menu');
     };
 
     const biometricLogin = async () => {

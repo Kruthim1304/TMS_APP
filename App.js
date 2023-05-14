@@ -6,7 +6,6 @@ import Login from './components/loginComp';
 import LandingPage from './components/LandingPage';
 import TruckDetails from './components/TruckDetails';
 import WelcomePage from './components/Welcome';
-import LoadingPage from './components/Loading';
 import Menu from './components/Menu';
 import MapScreen from './components/MapScreen';
 
@@ -24,14 +23,14 @@ function App() {
           name="Login" 
           component={Login} 
           options={{ headerShown: false }} />
+          <Stack.Screen 
+          name="Menu" 
+          component={Menu} 
+          options={{ headerShown:'Transportation Management System' }} />
         <Stack.Screen 
           name="MapScreen" 
           component={MapScreen} 
-          options={{ headerShown: false }} />
-        <Stack.Screen 
-          name="Menu" 
-          component={Menu} 
-          options={{ headerShown: false }} />
+          options={{ headerShown: 'Transportation Management System' }} />
         <Stack.Screen 
           name="LandingPage" 
           component={LandingPage}

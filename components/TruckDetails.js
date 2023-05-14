@@ -56,10 +56,10 @@ const TruckDetails = () => {
       <MapView
         style={{ flex: 0 ,height:455,margin:15,marginTop:10,borderRadius:10 }}
         initialRegion={{
-          latitude: 23.0,
-          longitude: 77.0,
-          latitudeDelta: 10.0,
-          longitudeDelta: 10.0,
+          latitude: 22.3511148,
+          longitude: 78.6677428,
+          latitudeDelta: 30,
+          longitudeDelta: 30,
         }}
       >
         {truckDetails.map(truck => (
