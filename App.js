@@ -7,6 +7,7 @@ import LandingPage from './components/LandingPage';
 import TruckDetails from './components/TruckDetails';
 import WelcomePage from './components/Welcome';
 import LoadingPage from './components/Loading';
+import Menu from './components/Menu';
 import MapScreen from './components/MapScreen';
 
 const Stack = createStackNavigator();
@@ -26,6 +27,10 @@ function App() {
         <Stack.Screen 
           name="MapScreen" 
           component={MapScreen} 
+          options={{ headerShown: false }} />
+        <Stack.Screen 
+          name="Menu" 
+          component={Menu} 
           options={{ headerShown: false }} />
         <Stack.Screen 
           name="LandingPage" 
