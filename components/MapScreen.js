@@ -152,6 +152,15 @@ const MapScreen = () => {
     >
       <Text style={styles.buttonText}>Delhi</Text>
     </TouchableOpacity>
+
+    <TouchableOpacity
+      style={styles.button}
+      onPress={() =>
+        handleCityPress({ name: 'Others', latitude: 22.3511148, longitude: 78.6677428 })
+      }
+    >
+      <Text style={styles.buttonText}>Others</Text>
+    </TouchableOpacity>
   </View>
 </View>
 );
@@ -186,7 +195,7 @@ const styles = StyleSheet.create({
     padding: 8,
     marginTop:10,
     borderRadius: 3,
-    margin:8,
+    margin:5,
   },
   buttonText: {
   color: 'white',

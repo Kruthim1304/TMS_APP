@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, TextInput } from 'react-native';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
-
 
 const LandingPage = () => {
   const [truckStatuses, setTruckStatuses] = useState({
@@ -13,6 +12,7 @@ const LandingPage = () => {
   });
   const [showTable, setShowTable] = useState(false);
   const [truckData, setTruckData] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -72,60 +72,75 @@ const LandingPage = () => {
       });
   };
 
- 
-const fetchAllTruckData = () => {
-  axios
-    .get(
-      'http://zingtrack.com/GPSRestWebService/rest/GetTripData/json?API_KEY=CST22ZTTRIPRNIPLAPI&PLANT=RNAIPL'
-    )
-    .then((response) => {
-      const data = response.data;
-      setTruckData(data.tripList);
-      setShowTable(true);
-    })
-    .catch((error) => {
-      console.log('Error:', error);
-    });
-};
+  const fetchAllTruckData = () => {
+    axios
+      .get(
+        'http://zingtrack.com/GPSRestWebService/rest/GetTripData/json?API_KEY=CST22ZTTRIPRNIPLAPI&PLANT=RNAIPL'
+      )
+      .then((response) => {
+        const data = response.data;
+        setTruckData(data.tripList);
+        setShowTable(true);
+      })
+      .catch((error) => {
+        console.log('Error:', error);
+      });
+  };
 
+  const navigation = useNavigation();
 
-const navigation = useNavigation();
+  const handleTruckNumberClick = (truckNumber, currentLocation) => {
+    navigation.navigate('TruckDetails', { truckNumber, currentLocation });
+  };
 
-const handleTruckNumberClick = (truckNumber, currentLocation) => {
-  navigation.navigate('TruckDetails', { truckNumber, currentLocation });
-};
+  const handleSearchQueryChange = (query) => {
+    setSearchQuery(query);
+  };
 
+  const filteredTruckData = truckData.filter((truck) =>
+    truck.truckNo.includes(searchQuery)
+  );
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
-
       <View style={styles.container}>
-      <View style={styles.backdrop}>
-        <Image
+        <View style={styles.backdrop}>
+          <Image
             style={styles.backdropImg}
-            source={require("../assets/image001.png")}
+            source={require('../assets/image001.png')}
           />
         </View>
         <View>
-        <Text style={styles.heading}> Truck Summary :  </Text>
+          <Text style={styles.heading}>Truck Summary :</Text>
         </View>
         <View style={styles.row}>
-       
-          <TouchableOpacity style={styles.box} onPress={() => fetchTruckData('Ahead & Parked')}>
+          <TouchableOpacity
+            style={styles.box}
+            onPress={() => fetchTruckData('Ahead & Parked')}
+          >
             <Text style={styles.label}>Ahead & Parked</Text>
             <Text style={styles.count}>{truckStatuses.aheadAndParkedCount}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.box} onPress={() => fetchTruckData('Ahead & Moving')}>
+          <TouchableOpacity
+            style={styles.box}
+            onPress={() => fetchTruckData('Ahead & Moving')}
+          >
             <Text style={styles.label}>Ahead & Moving</Text>
             <Text style={styles.count}>{truckStatuses.aheadAndMovingCount}</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.row}>
-          <TouchableOpacity style={styles.box} onPress={() => fetchTruckData('Delay & Parked')}>
+          <TouchableOpacity
+            style={styles.box}
+            onPress={() => fetchTruckData('Delay & Parked')}
+          >
             <Text style={styles.label}>Delay & Parked</Text>
             <Text style={styles.count}>{truckStatuses.delayAndParkedCount}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.box} onPress={() => fetchTruckData('Delay & Moving')}>
+          <TouchableOpacity
+            style={styles.box}
+            onPress={() => fetchTruckData('Delay & Moving')}
+          >
             <Text style={styles.label}>Delay & Moving</Text>
             <Text style={styles.count}>{truckStatuses.delayAndMovingCount}</Text>
           </TouchableOpacity>
@@ -133,38 +148,44 @@ const handleTruckNumberClick = (truckNumber, currentLocation) => {
         <TouchableOpacity style={styles.allButton} onPress={fetchAllTruckData}>
           <Text style={styles.allButtonText}>All</Text>
         </TouchableOpacity>
+        <View style={styles.searchBarContainer}>
+          <TextInput
+            style={styles.searchBar}
+            placeholder="Search truck number"
+            placeholderTextColor="#ffffff"
+            value={searchQuery}
+            onChangeText={handleSearchQueryChange}
+          />
+        </View>
         {showTable && (
           <View style={styles.tableContainer}>
-            <Text style={styles.tableHeading}>Truck Data : </Text>
+            <Text style={styles.tableHeading}>Truck Data:</Text>
             <View style={styles.table}>
               <View style={styles.tableRow}>
                 <Text style={styles.tableHeader}>Truck Number</Text>
                 <View style={styles.verticalLine} />
-
                 <Text style={styles.tableHeader}>Status</Text>
                 <View style={styles.verticalLine} />
-
                 <Text style={styles.tableHeader}>Current Location</Text>
                 <View style={styles.verticalLine} />
-
                 <Text style={styles.tableHeader}>ETA</Text>
               </View>
-              {truckData.map((truck) => (
+              {filteredTruckData.map((truck) => (
                 <TouchableOpacity
-                style={styles.tableRow}
-                key={truck.truckNo}
-                onPress={() =>
-                  handleTruckNumberClick(truck.truckNo, truck.currentLoc)
-                }
-              >
-                <Text style={styles.tableCell}>{truck.truckNo}</Text>
-                <View style={styles.verticalLine} />
-                <Text style={styles.tableCell}>{truck.truckSts}</Text>
-                <View style={styles.verticalLine} />
-                <Text style={styles.tableCell}>{truck.currentLoc}</Text>
-                <View style={styles.verticalLine} />
-                <Text style={styles.tableCell}>{truck.eta}</Text>
-              </TouchableOpacity>
+                  style={styles.tableRow}
+                  key={truck.truckNo}
+                  onPress={() =>
+                    handleTruckNumberClick(truck.truckNo, truck.currentLoc)
+                  }
+                >
+                  <Text style={styles.tableCell}>{truck.truckNo}</Text>
+                  <View style={styles.verticalLine} />
+                  <Text style={styles.tableCell}>{truck.truckSts}</Text>
+                  <View style={styles.verticalLine} />
+                  <Text style={styles.tableCell}>{truck.currentLoc}</Text>
+                  <View style={styles.verticalLine} />
+                  <Text style={styles.tableCell}>{truck.eta}</Text>
+                </TouchableOpacity>
               ))}
             </View>
           </View>
@@ -173,7 +194,6 @@ const handleTruckNumberClick = (truckNumber, currentLocation) => {
     </ScrollView>
   );
 };
-
 
 
 const styles = StyleSheet.create({
@@ -292,6 +312,20 @@ backdrop: {
 backdropImg: {
   flex: 1,
   resizeMode: 'cover',
+},
+searchBarContainer: {
+  marginTop: 10,
+  marginBottom: 20,
+  width: '100%',
+  paddingHorizontal: 20,
+},
+searchBar: {
+  borderWidth: 1,
+  borderColor: '#FC6D26',
+  borderRadius: 5,
+  paddingVertical: 8,
+  paddingHorizontal: 12,
+  color: '#ffffff', // Set the text color to white
 },
 });
 

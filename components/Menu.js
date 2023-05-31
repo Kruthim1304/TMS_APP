@@ -23,7 +23,7 @@ const MenuPage = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Image source={require('../assets/background.png')} style={styles.backgroundImage} />
-      <View style={styles.content}>
+          <View style={styles.content}>
         <View style={styles.headingContainer}>
           <Text style={styles.heading}>Menu : </Text>
         </View>
@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
+ 
   backgroundImage: {
     position: 'absolute',
     top: 0,

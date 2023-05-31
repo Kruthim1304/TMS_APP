@@ -77,7 +77,6 @@ import {
           <TextInput
             style={styles.inputStyle}
             autoCapitalize="none"
-            autoCorrect="none"
             placeholder="Z-ID"
             placeholderTextColor="white" 
             value={userName}

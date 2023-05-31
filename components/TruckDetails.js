@@ -1,16 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text,StyleSheet,Image } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { View, Text, StyleSheet, Image, TextInput } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import axios from 'axios';
+import { useNavigation } from '@react-navigation/native';
 
-const TruckDetails = () => {
+const TruckDetails = ({ selectedCity }) => {
   const [truckDetails, setTruckDetails] = useState([]);
   const [selectedTruck, setSelectedTruck] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const mapViewRef = useRef(null);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchTruckData = async () => {
       try {
-        const response = await axios.get('http://zingtrack.com/GPSRestWebService/rest/GetTripData/json?API_KEY=CST22ZTTRIPRNIPLAPI&PLANT=RNAIPL');
+        const response = await axios.get(
+          'http://zingtrack.com/GPSRestWebService/rest/GetTripData/json?API_KEY=CST22ZTTRIPRNIPLAPI&PLANT=RNAIPL'
+        );
         const data = response.data;
         const trucks = [];
 
@@ -22,7 +28,7 @@ const TruckDetails = () => {
             currentLocation: truck.currentLoc,
             nextLocation: truck.nextLoc,
             distanceTravelled: truck.disCovered,
-            totalDistance: truck.totalDis
+            totalDistance: truck.totalDis,
           };
 
           trucks.push(truckData);
@@ -37,24 +43,54 @@ const TruckDetails = () => {
     fetchTruckData();
   }, []);
 
+  useEffect(() => {
+    if (selectedCity && selectedCity.name === 'Others') {
+      setSelectedTruck(null);
+      setSearchQuery('');
+    }
+  }, [selectedCity]);
+
   const handleMarkerPress = truckNumber => {
     const selectedTruck = truckDetails.find(truck => truck.truckNumber === truckNumber);
     setSelectedTruck(selectedTruck);
   };
 
+  const handleSearchQueryChange = text => {
+    setSearchQuery(text);
+    const selectedTruck = truckDetails.find(truck => truck.truckNumber === text);
+    setSelectedTruck(selectedTruck);
+
+    if (selectedTruck) {
+      const { latitude, longitude } = selectedTruck;
+      mapViewRef.current.animateToRegion({
+        latitude,
+        longitude,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      });
+    }
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.backdrop}>
-        <Image
-            style={styles.backdropImg}
-            source={require("../assets/image001.png")}
-          />
-        </View>
-        <View>
-        <Text style={styles.heading}> Truck Tracking:  </Text>
-        </View>
+        <Image style={styles.backdropImg} source={require("../assets/image001.png")} />
+      </View>
+      <View>
+        <Text style={styles.heading}>Truck Tracking:</Text>
+      </View>
+      <View style={styles.searchBarContainer}>
+        <TextInput
+          style={styles.searchBar}
+          placeholder="Search truck number"
+          placeholderTextColor="#ffffff"
+          value={searchQuery}
+          onChangeText={handleSearchQueryChange}
+        />
+      </View>
       <MapView
-        style={{ flex: 0 ,height:455,margin:15,marginTop:10,borderRadius:10 }}
+        ref={mapViewRef}
+        style={{ flex: 0, height: 455, margin: 15, marginTop: 10, borderRadius: 10 }}
         initialRegion={{
           latitude: 22.3511148,
           longitude: 78.6677428,
@@ -72,11 +108,11 @@ const TruckDetails = () => {
         ))}
       </MapView>
 
-      <View >
-      <Text style={styles.status}> Status: </Text>
+      <View>
+        <Text style={styles.status}>Status:</Text>
       </View>
 
-      { selectedTruck && (
+      {selectedTruck && (
         <View style={styles.textdata}>
           <Text style={styles.textdatatext}>Truck Number: {selectedTruck.truckNumber}</Text>
           <Text style={styles.textdatatext}>Current Location: {selectedTruck.currentLocation}</Text>
@@ -88,6 +124,7 @@ const TruckDetails = () => {
     </View>
   );
 };
+
 
 
 const styles = StyleSheet.create({ 
@@ -136,6 +173,18 @@ backdrop: {
 backdropImg: {
 flex: 1,
 resizeMode: 'cover',
+},
+searchBarContainer: {
+  padding: 10,
+},
+searchBar: {
+  borderWidth: 1,
+  borderColor: '#ffffff',
+  borderRadius: 5,
+  paddingVertical: 8,
+  paddingHorizontal: 12,
+  width: '100%',
+  color: '#ffffff',
 },
 });
 
